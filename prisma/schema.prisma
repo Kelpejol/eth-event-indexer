@@ -16,3 +16,9 @@ model TransferEvent {
   blockNum  Int
   timestamp Int
 }
+
+model IndexerState {
+  id        Int @id @default(1)
+  lastBlock Int
+}
+
