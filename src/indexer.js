@@ -14,6 +14,20 @@ const contract = new ethers.Contract(
   provider
 );
 
+async function getLastBlock() {
+  const state = await prisma.IndexerState.findUnique({ where: { id: 1 } });
+  return state?.lastBlock ?? (await provider.getBlockNumber());
+}
+
+async function saveLastBlock(block) {
+  await prisma.IndexerState.upsert({
+    where: { id: 1 },
+    update: { lastBlock: block },
+    create: { id: 1, lastBlock: block }
+  });
+}
+
+console.log("🔁 Starting indexer...");
 
 contract.on("Transfer", async (from, to, value, event) => {
   try {
@@ -28,8 +42,7 @@ contract.on("Transfer", async (from, to, value, event) => {
       }
     });
 
+    await saveLastBlock(event.blockNumber);
     console.log(`Indexed tx ${event.transactionHash}`);
-  } catch (err) {
-    // ignore duplicates
-  }
+  } catch {}
 });
