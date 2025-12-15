@@ -2,11 +2,15 @@ import { ethers } from 'ethers';
 import { prisma } from './db.js';
 import { config } from './config.js';
 
+
+
 const provider = new ethers.JsonRpcProvider(config.RPC_URL);
 
 const ERC20_ABI = [
   "event Transfer(address indexed from, address indexed to, uint256 value)"
 ];
+
+
 
 const contract = new ethers.Contract(
   config.ERC20_ADDRESS,

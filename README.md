@@ -38,3 +38,16 @@ on-chain data into queryable infrastructure.
 - Backfilling historical events
 - Postgres support
 - Metrics & monitoring
+
+## Reliability Considerations
+
+- Checkpointing to avoid duplicate indexing
+- Optional historical backfill
+- Basic reorg protection via confirmations
+
+## Design Tradeoffs
+
+- SQLite chosen for simplicity
+- Event-based ingestion over polling
+- No assumptions about finality
+
