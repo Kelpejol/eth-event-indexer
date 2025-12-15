@@ -14,7 +14,6 @@ const contract = new ethers.Contract(
   provider
 );
 
-console.log();
 
 contract.on("Transfer", async (from, to, value, event) => {
   try {
