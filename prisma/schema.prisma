@@ -1,6 +1,6 @@
 datasource db {
   provider = "sqlite"
-  url      = "file:./dev.db"
+  url      = env("DATABASE_URL")
 }
 
 generator client {
@@ -15,10 +15,13 @@ model TransferEvent {
   txHash    String   @unique
   blockNum  Int
   timestamp Int
+
+  @@index([from])
+  @@index([to])
+  @@index([blockNum])
 }
 
 model IndexerState {
   id        Int @id @default(1)
   lastBlock Int
 }
-
