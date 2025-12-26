@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  indexer:
+    build: .
+    container_name: eth-indexer
+    environment:
+      - RPC_URL=${RPC_URL}
+      - ERC20_ADDRESS=${ERC20_ADDRESS}
+      - DATABASE_URL=postgresql://indexer:password@db:5432/indexer
+    depends_on:
+      - db
+    command: npm run start:indexer
+    restart: unless-stopped
+
+  api:
+    build: .
+    container_name: eth-api
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=postgresql://indexer:password@db:5432/indexer
+      - PORT=3000
+    depends_on:
+      - db
+    command: npm run start:api
+    restart: unless-stopped
+
+  db:
+    image: postgres:16-alpine
+    container_name: eth-db
+    environment:
+      - POSTGRES_USER=indexer
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=indexer
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+
+volumes:
+  postgres-data:
